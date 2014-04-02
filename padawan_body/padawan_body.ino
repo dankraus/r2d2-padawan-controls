@@ -312,7 +312,7 @@ void loop(){
   
   if(ps2x.ButtonPressed(PSB_PAD_DOWN)){
     if ((ps2x.Button(PSB_L2))){
-      closeSidePanel(0);
+      //digitalWrite(EXTINGUISHERPIN, LOW);
     }
   }
 
