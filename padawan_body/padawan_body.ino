@@ -53,6 +53,17 @@ MP3Trigger trigger;
 //#include <SoftEasyTransfer.h>
 #include <Wire.h>
 
+///DOME SERVO PANELS
+#include <Adafruit_PWMServoDriver.h>
+Adafruit_PWMServoDriver domeServos = Adafruit_PWMServoDriver(0x40);
+int PiePanelClosePositions[4] = {299, 299, 299, 299}; // close spots
+int PiePanelOpenPositions[4] = {600, 600 , 600, 600}; // open spots
+int SidePanelClosePositions[4] = {197, 210, 204, 200}; // close spots
+int SidePanelOpenPositions[4] ={600, 600, 600, 600}; // open spots 
+
+boolean isPiePanelOpen[4];
+boolean isSidePanelOpen[4];
+
 //////////////////////////////////////////////////////////////////
 
 
@@ -282,19 +293,26 @@ void loop(){
   //FIRE EXTINGUISHER
   if(ps2x.ButtonPressed(PSB_PAD_UP)){
     if ((ps2x.Button(PSB_L2))){
-      digitalWrite(EXTINGUISHERPIN, LOW);
+      if(isSidePanelOpen[0]){
+        //TRIGGER EXTINGUISHER
+        digitalWrite(EXTINGUISHERPIN, LOW);
+      } else {
+        openSidePanel(0);
+      }
     }
   }
   //on up release, turn off extinguisher
   if(ps2x.ButtonReleased(PSB_PAD_UP)){
     if ((ps2x.Button(PSB_L2))){
-      digitalWrite(EXTINGUISHERPIN, HIGH);
+      if(isSidePanelOpen[0]){
+        digitalWrite(EXTINGUISHERPIN, HIGH);
+      }
     }
   }
   
   if(ps2x.ButtonPressed(PSB_PAD_DOWN)){
     if ((ps2x.Button(PSB_L2))){
-      //digitalWrite(EXTINGUISHERPIN, LOW);
+      closeSidePanel(0);
     }
   }
 
@@ -539,4 +557,82 @@ void triggerI2C(int deviceID, int eventID){
 }
 /////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////
+
+void  closeAllPanels(){
+  closePiePanel(0);
+  closePiePanel(1);
+  closePiePanel(2);
+  closePiePanel(3);
+  
+  closeSidePanel(0);
+  closeSidePanel(1);
+  closeSidePanel(2);
+  closeSidePanel(3);
+}
+
+void  openAllPanels(){
+  openPiePanel(0);
+  openPiePanel(1);
+  openPiePanel(2);
+  openPiePanel(3);
+  
+  openSidePanel(0);
+  openSidePanel(1);
+  openSidePanel(2);
+  openSidePanel(3);  
+}
+
+void  closeAllPiePanels(){
+  closePiePanel(0);
+  closePiePanel(1);
+  closePiePanel(2);
+  closePiePanel(3);
+}
+
+void  openAllPiePanels(){
+  openPiePanel(0);
+  openPiePanel(1);
+  openPiePanel(2);
+  openPiePanel(3);
+}
+
+void  closeAllSidePanels(){ 
+  closeSidePanel(0);
+  closeSidePanel(1);
+  closeSidePanel(2);
+  closeSidePanel(3);
+}
+
+void  openAllSidePanels(){
+  openSidePanel(0);
+  openSidePanel(1);
+  openSidePanel(2);
+  openSidePanel(3);  
+}
+
+void openPiePanel(int num){  
+  //Pie Panels occupy Servos 0,1,2,3
+  domeServos.setPWM(num, 0, PiePanelOpenPositions[num]);
+  isPiePanelOpen[num] = true;
+}
+
+void openSidePanel(int num){  
+  //Sidepanels occupy Servos Number 4,5,6,7
+  //add 4 to num for making servo position call
+  domeServos.setPWM(num+4, 0, SidePanelOpenPositions[num]);
+  isSidePanelOpen[num] = true;
+}
+
+void closePiePanel(int num){
+  //Pie Panels occupy Servos 0,1,2,3  
+  domeServos.setPWM(num, 0, PiePanelClosePositions[num]);
+  isPiePanelOpen[num] = false;
+}
+
+void closeSidePanel(int num){  
+  //Sidepanels occupy Servos Number 4,5,6,7
+  //add 4 to num for making servo position call
+  domeServos.setPWM(num+4, 0, SidePanelClosePositions[num]);
+  isSidePanelOpen[num] = false;
+}
 
