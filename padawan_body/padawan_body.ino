@@ -56,9 +56,9 @@ MP3Trigger trigger;
 ///DOME SERVO PANELS
 #include <Adafruit_PWMServoDriver.h>
 Adafruit_PWMServoDriver domeServos = Adafruit_PWMServoDriver(0x40);
-int PiePanelClosePositions[4] = {299, 299, 299, 299}; // close spots
-int PiePanelOpenPositions[4] = {600, 600 , 600, 600}; // open spots
-int SidePanelClosePositions[4] = {197, 210, 204, 200}; // close spots
+int PiePanelClosePositions[4] = {280, 298, 275, 297}; // close spots
+int PiePanelOpenPositions[4] = {597, 600, 594, 600}; // open spots
+int SidePanelClosePositions[4] = {180, 208, 211, 200}; // close spots
 int SidePanelOpenPositions[4] ={600, 600, 600, 600}; // open spots 
 
 boolean isPiePanelOpen[4];
@@ -620,7 +620,7 @@ void openSidePanel(int num){
   //Sidepanels occupy Servos Number 4,5,6,7
   //add 4 to num for making servo position call
   domeServos.setPWM(num+4, 0, SidePanelOpenPositions[num]);
-  isSidePanelOpen[num] = true;
+  isSidePanelOpen[num] = true; 
 }
 
 void closePiePanel(int num){
